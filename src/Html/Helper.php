@@ -74,7 +74,7 @@ class Helper
         $link = $this->link($url, $text, $attributes + [
             'onclick' => 'event.preventDefault();' . $onclick
         ]);
-        $form = $formHelper->create(null, ['action' => $url, 'id' => $formId]) . $formHelper->end();
+        $form = $formHelper->create(null, ['action' => $url, 'id' => $formId, 'style' => 'display: none;']) . $formHelper->end();
 
         return new HtmlString($link . $form);
     }
