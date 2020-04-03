@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace Brnbio\LaravelHtml\Html;
 
+use Brnbio\LaravelHtml\Html\Element\Icon;
+use Brnbio\LaravelHtml\Html\Element\Image;
+use Brnbio\LaravelHtml\Html\Element\Link;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
@@ -50,8 +53,7 @@ class Helper
             $text = $url;
         }
 
-        return (new Element\Link($url, $text, $attributes))
-            ->render();
+        return Element\Link::create($url, $text, $attributes)->render();
     }
 
     /**
@@ -75,5 +77,28 @@ class Helper
         $form = $formHelper->create(null, ['action' => $url, 'id' => $formId]) . $formHelper->end();
 
         return new HtmlString($link . $form);
+    }
+
+    /**
+     * @param string $icon
+     * @return HtmlString
+     */
+    public function icon(string $icon): HtmlString
+    {
+        return Icon::create($icon)->render();
+    }
+
+    /**
+     * @param string $src
+     * @param array $attributes
+     * @return HtmlString
+     */
+    public function image(string $src, array $attributes = []): HtmlString
+    {
+        if (!Str::contains($src, ['http:', 'https:'])) {
+            $src = asset($src);
+        }
+
+        return Image::create($src, $attributes)->render();
     }
 }

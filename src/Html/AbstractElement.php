@@ -187,6 +187,15 @@ abstract class AbstractElement
     abstract public function render(): HtmlString;
 
     /**
+     * @param mixed ...$args
+     * @return AbstractElement
+     */
+    public static function create(...$args): AbstractElement
+    {
+        return new static(...$args);
+    }
+
+    /**
      * @return mixed[]
      */
     public function getAttributes(): array
