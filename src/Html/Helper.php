@@ -20,6 +20,7 @@ use Illuminate\Support\Str;
 
 /**
  * Class Helper
+ *
  * @package Brnbio\LaravelHtml\Html
  */
 class Helper
@@ -67,14 +68,18 @@ class Helper
         $formHelper = \Brnbio\LaravelForm\Form\Helper::getInstance();
         $formId = 'html-postlink-' . Str::uuid()->toString();
         $onclick = 'document.getElementById("' . $formId . '").submit();';
-        if (!empty($attributes['confirm'])) {
+        if ( !empty($attributes['confirm'])) {
             $onclick = "if(confirm('" . e($attributes['confirm']) . "')){" . $onclick . "}else{return false;}";
         }
 
         $link = $this->link($url, $text, $attributes + [
-            'onclick' => 'event.preventDefault();' . $onclick
-        ]);
-        $form = $formHelper->create(null, ['action' => $url, 'id' => $formId, 'style' => 'display: none;']) . $formHelper->end();
+                'onclick' => 'event.preventDefault();' . $onclick,
+            ]);
+        $form = $formHelper->create(null, [
+                'action' => $url,
+                'id'     => $formId,
+                'style'  => 'display: none;',
+            ]) . $formHelper->end();
 
         return new HtmlString($link . $form);
     }
@@ -95,10 +100,29 @@ class Helper
      */
     public function image(string $src, array $attributes = []): HtmlString
     {
-        if (!Str::contains($src, ['http:', 'https:'])) {
+        if ( !Str::contains($src, [
+            'http:',
+            'https:',
+        ])) {
             $src = asset($src);
         }
 
+        if ( !empty($attributes['inline'])) {
+            $src = $this->getInlineImage($src);
+        }
+
         return Image::create($src, $attributes)->render();
+    }
+
+    /**
+     * @param string $path
+     * @return string
+     */
+    protected function getInlineImage(string $path): string
+    {
+        $data = file_get_contents($path);
+        $type = Str::of($path)->afterLast('.')->__toString();
+
+        return 'data:image/' . $type . ';base64,' . base64_encode($data);
     }
 }

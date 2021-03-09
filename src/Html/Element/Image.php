@@ -27,7 +27,7 @@ class Image extends AbstractElement
     /**
      * @var string
      */
-    protected $defaultTemplate = '<img src="{{src}}" {{attrs}}>';
+    protected $defaultTemplate = '<img src="{{src}}" {{attrs}} />';
 
     /**
      * @var string
